@@ -1,126 +1,137 @@
-version: "2"
+version: '3'
 services:
-  varnish:
-    build:
-      context: varnish/
-    environment:
-      - VIRTUAL_HOST=magento2.docker
-      - VIRTUAL_PORT=80
-      - HTTPS_METHOD=noredirect
-    ports:
-      - "80"
-    links:
-      - web
+  redis:
+    container_name: magento-redis
+    image: magento/magento-cloud-docker-redis
+    restart: 'always'
+    env_file:
+      - installer.env
     volumes:
-      - ./logs/varnish/:/var/log
-
+      - ./redis-data:/data
+    ports:
+      - 6379
+    healthcheck:
+      test: 'redis-cli ping || exit 1'
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    networks:
+      - magento
+#  varnish:
+#    container_name: magento-varnish
+#    image: magento/magento-cloud-docker-varnish
+#    restart: 'always'
+#    env_file:
+#      - .env
+#    volumes:
+#      - ./conf/varnish/varnish.secret:/etc/varnish/secret
+#    ports:
+#      - '80:80'
+#      - "6082:6082"
+#    depends_on:
+#      - web
+#    networks:
+#      - magento
   web:
-    build:
-      context: nginx/
-    ports:
-      - "80"
-      - "443"
-    links:
+    container_name: ${WEB_CONTAINER_NAME}
+    image: magento/magento-cloud-docker-nginx
+    env_file:
+      - .env
+    restart: on-failure:5
+    depends_on:
       - fpm
-      - db
     volumes:
-      - ./logs/web/:/var/log/nginx
-#    command: [nginx-debug, '-g', 'daemon off;']
-    volumes_from:
-      - appdata
-    env_file:
-      - ./global.env
-#    environment:
-#      - VIRTUAL_HOST=magento2.docker
-#      - VIRTUAL_PORT=80
-#      - HTTPS_METHOD=noredirect
-
+      - ./htdocs:/app:rw,delegated
+      - ./conf/ssl.conf:/etc/nginx/ssl.conf
+      - ./conf/ssl:/etc/nginx/ssl
+# If want to use varnish then comment below 3 lines
+    ports:
+      - 80:80
+      - 443:443
+    command: [nginx-debug, '-g', 'daemon off;']
+    networks:
+      - magento
   fpm:
-    hostname: fpm.magento2.docker
-    build:
-      context: php/${PHP_VERSION}-fpm/
-    image: ${COMPOSE_PROJECT_NAME}_fpm:${PHP_VERSION}
-    ports:
-      - "9000"
-    links:
-      - db
-    volumes:
-      - ./logs/fpm/:/var/log
-    volumes_from:
-      - appdata
+    container_name: magento-php-fpm
+    image: magentoomitsis/nginx-fpm7.2-magento
+    restart: on-failure:5
+#    depends_on:
+#      - mysql
     env_file:
-      - ./global.env
-
-  db:
-    image: mariadb:10
-    ports:
-      - "3306"
+      - .env
+    expose:
+      - ${FPM_PORT}
     volumes:
-      - ./logs/db/:/var/log
-    volumes_from:
-      - dbdata
-    environment:
-      - MYSQL_ROOT_PASSWORD=magento2
-      - MYSQL_DATABASE=magento2
-      - MYSQL_USER=magento2
-      - MYSQL_PASSWORD=magento2
-      - TERM=meh
-
+      - ./htdocs:/app:rw,delegated
+    networks:
+      - magento
   cli:
-    hostname: cli.magento2.docker
-    build:
-      context: php/${PHP_VERSION}-cli/
-    image: ${COMPOSE_PROJECT_NAME}_cli:${PHP_VERSION}
-    links:
-      - db
-    volumes:
-      - ~/.composer/cache:/root/.composer/cache
-      - ./logs/cli/:/var/log
-    volumes_from:
-      - appdata
-    env_file:
-      - ./global.env
-      - ./composer.env
-    environment:
-      - M2SETUP_INSTALL_DB=true
-      - M2SETUP_DB_HOST=db
-      - M2SETUP_DB_NAME=magento2
-      - M2SETUP_DB_USER=magento2
-      - M2SETUP_DB_PASSWORD=magento2
-      - M2SETUP_BASE_URL=http://magento2.docker/
-      - M2SETUP_SECURE_BASE_URL=https://magento2.docker/
-      - M2SETUP_BACKEND_FRONTNAME=admin
-      - M2SETUP_ADMIN_FIRSTNAME=Admin
-      - M2SETUP_ADMIN_LASTNAME=User
-      - M2SETUP_ADMIN_EMAIL=itsazzad@gmail.com
-      - M2SETUP_ADMIN_USER=admin
-      - M2SETUP_ADMIN_PASSWORD=password1
-      - M2SETUP_VERSION=${MAGENTO_VERSION}
-      - M2SETUP_USE_SAMPLE_DATA=true
-
+      container_name: magento-php-cli
+      image: magentoomitsis/nginx-fpm7.2-magento
+      tty: true
+#      depends_on:
+#        - mysql
+      volumes:
+        - ./htdocs:/app:rw,delegated
+        - ~/.composer/cache:/root/.composer/cache
+        - ./auth.json:/root/.composer/auth.json
+      env_file:
+        - .env
+      networks:
+        - magento
   cron:
-    build:
-      context: php/${PHP_VERSION}-cli/
-    image: ${COMPOSE_PROJECT_NAME}_cron:${PHP_VERSION}
-    hostname: magento2-cron.docker
-    command: run-cron
+    container_name: magento-php-cron
+    image: magentoomitsis/nginx-fpm7.2-magento
+    command: ["run-cron", "--privileged"]
+#    depends_on:
+#      - mysql
+    tty: true
     env_file:
-      - ./global.env    
-    environment:
-      - ENABLE_SENDMAIL=true
+      - .env
     volumes:
-      - ./logs/cron/:/var/log
-    volumes_from:
-      - appdata
-    links:
-      - db
-
-  appdata:
-    image: tianon/true
-    volumes:
-      - ./magento:/var/www/magento
-
-  dbdata:
-    image: tianon/true
-    volumes:
-      - /var/lib/mysql
+      - ./htdocs:/app:rw,delegated
+    networks:
+      - magento
+#  rabbitmq:
+#    container_name: magento-rabbitmq
+#    image: magento2/rabbitmq:3.9.5
+#    ports:
+#      - 5672:5672
+#      - 15672:15672
+#    volumes:
+#      - ./rabbitmq-data:/data
+  elasticsearch:
+    image: magento/magento-cloud-docker-elasticsearch
+    container_name: magento-elasticsearch
+    env_file:
+      - .env
+    networks:
+      - magento
+    ports:
+      - 9200:9200
+#    volumes:
+#      - ./elastic-data:/usr/share/elasticsearch/data
+#    healthcheck:
+#      test: [ "CMD-SHELL", "curl --silent --fail localhost:9200/_cat/nodes?v\\&pretty || exit 1" ]
+#  mysql:
+#    container_name: magento-mysql
+#    image: magento2/mariadb:10.4
+#    healthcheck:
+#      test: 'mysqladmin ping --silent'
+#    restart: on-failure:5
+#    env_file:
+#      - installer.env
+#    ports:
+#      - "3306:3306"
+#    volumes:
+#      - ./dbs-data:/var/lib/mysql:rw,delegated
+#    networks:
+#      - magento
+volumes:
+  redis-data:
+  rabbitmq-data:
+#  elastic-data:
+#  dbs-data:
+networks:
+  magento:
+    driver: bridge
