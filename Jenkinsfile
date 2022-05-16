@@ -43,7 +43,7 @@ stages{
         steps{
             echo 'Building Started'
             script{
-                    docker.withRegistry('docker.io', 'docker-creds'){
+                    docker.withRegistry('', 'docker-creds'){
                     def customerimage = docker .build('https://hub.docker.com/repository/docker/chetancc023/magento:${currentBuild.id}')
                     customerImage.push('${currentBuild.id}')   
 
