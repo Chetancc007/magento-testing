@@ -102,7 +102,7 @@ RUN \
 #COPY ./magento2-cors.conf /var/www/html/magento2-cors.conf;
 
 # Configure supervisord
-COPY ./docker-config/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+#COPY ./docker-config/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # stdout configuration for nginx logs
 #RUN ln -sf /dev/stdout /var/log/nginx/access.log \
