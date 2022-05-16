@@ -110,7 +110,7 @@ RUN \
 
 WORKDIR /var/www/html
 
-COPY ./auth.json /var/www/html/auth.json
+#COPY ./auth.json /var/www/html/auth.json
 COPY ./composer.json /var/www/html/composer.json
 
 RUN curl -sS https://getcomposer.org/installer -o composer-setup.php
