@@ -97,8 +97,8 @@ RUN \
       /usr/local/etc/php/conf.d/newrelic.ini
 
 # Configure nginx
-COPY ./docker-config/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY ./docker-config/nginx/nginx.conf.sample /etc/nginx/nginx.conf.sample
+#COPY ./docker-config/nginx/nginx.conf /etc/nginx/nginx.conf
+#COPY ./docker-config/nginx/nginx.conf.sample /etc/nginx/nginx.conf.sample
 #COPY ./magento2-cors.conf /var/www/html/magento2-cors.conf;
 
 # Configure supervisord
