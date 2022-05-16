@@ -39,7 +39,7 @@ stages{
 
     // Docker build and push to docker-hub //
 
-    stage(' Docker Build and Push '){
+    stage(' Docker Build and Push To Docker-Hub '){
         steps{
             echo 'Building Started'
             script{
