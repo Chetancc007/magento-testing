@@ -28,6 +28,14 @@ stages{
             checkout scm
         }
     }
+    
+ stage("Install Project Dependencies"){
+
+        steps{
+            sh 'composer install'
+        }
+    } 
+       
 
     // Docker build and push to docker-hub //
 
