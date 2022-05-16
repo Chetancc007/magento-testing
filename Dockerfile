@@ -119,7 +119,7 @@ RUN /usr/local/bin/composer install --optimize-autoloader  --ignore-platform-req
 
 COPY . .
 
-Run sh setup.sh
+#Run sh setup.sh
 
 RUN chown -R www-data:www-data /var/www/html/
 
