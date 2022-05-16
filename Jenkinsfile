@@ -43,9 +43,10 @@ stages{
         steps{
             echo 'Building Started'
             script{
-                    docker.withRegistry('', 'docker-creds'){
-                    def customimage = docker .build('https://hub.docker.com/repository/docker/chetancc023/magento:latest')
-                    customImage.push('latest')   
+                dockerImage = docker.build imagename
+                docker.withRegistry('', 'docker-creds') {
+                dockerImage.push("$BUILD_NUMBER")
+                dockerImage.push('latest')    
 
                 }
 
