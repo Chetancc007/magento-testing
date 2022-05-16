@@ -58,8 +58,8 @@ RUN pecl install mailparse \
     && docker-php-ext-enable mailparse
 
 # Configure PHP-FPM
-COPY ./docker-config/php/php.ini /usr/local/etc/php/php.ini
-COPY ./docker-config/php/www.conf /usr/local/etc/php-fpm.d/www.conf
+// COPY ./docker-config/php/php.ini /usr/local/etc/php/php.ini
+// COPY ./docker-config/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 # RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 # Install Nginx
