@@ -57,7 +57,7 @@ stages{
         }
     }
     // Pulling docker images from hub and deploying using docker-compose method//
-   stage('Deploy') {
+   stage('Deploy'){
                     sh """
                         cd /magento-test/
                         docker-compose -f docker-compose pull
