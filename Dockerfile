@@ -107,7 +107,7 @@ RUN apt-get -y install supervisor
 RUN mkdir -p /var/log/supervisor
 
 # Configure supervisord
-COPY ./docker-config/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./supervisord.conf /etc/supervisor/supervisord.conf
 
 # stdout configuration for nginx logs
 #RUN ln -sf /dev/stdout /var/log/nginx/access.log \
