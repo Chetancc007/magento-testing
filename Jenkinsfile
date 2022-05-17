@@ -45,7 +45,7 @@ stages{
             script{
                 dockerImage = docker.build imagename
                 docker.withRegistry('', 'docker-creds') {
-                dockerImage.push("$BUILD_NUMBER")
+                dockerImage.push("latest")
                 dockerImage.push('latest')    
 
                 }
