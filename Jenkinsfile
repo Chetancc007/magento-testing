@@ -61,7 +61,7 @@ stages{
        
        steps{
                     sh """
-                        cd /root/magento-test
+                        cd /home/ubuntu
                         docker-compose -f docker-compose pull
                         docker-compose -f docker-compose up -d
                     """
