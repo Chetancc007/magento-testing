@@ -101,6 +101,11 @@ RUN \
 #COPY ./docker-config/nginx/nginx.conf.sample /etc/nginx/nginx.conf.sample
 #COPY ./magento2-cors.conf /var/www/html/magento2-cors.conf;
 
+
+# Setup Supervisor
+RUN apt-get -y install supervisor
+RUN mkdir -p /var/log/supervisor
+
 # Configure supervisord
 COPY ./docker-config/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
