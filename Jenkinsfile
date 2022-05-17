@@ -62,8 +62,8 @@ stages{
        steps{
                     sh """
                         cd /home/ubuntu
-                        docker-compose -f docker-compose pull
-                        docker-compose -f docker-compose up -d
+                        docker-compose -f docker-compose.yml pull
+                        docker-compose -f docker-compose.yml up -d
                     """
              
        }
