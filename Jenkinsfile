@@ -29,7 +29,7 @@ stages{
         }
     }
     
- stage("Install Project Dependencies"){
+ stage("composer install"){
 
         steps{
             sh 'composer install'
