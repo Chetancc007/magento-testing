@@ -38,7 +38,8 @@ stages{
         steps{
             sh 'php ./bin/magento maintenance:enable || true'
         }
-    }   
+    }  
+ } 
     
  stage("composer install"){
 
