@@ -12,23 +12,33 @@ options {
  environment {
     imagename = "chetancc023/magento"
     dockerImage = ''
-    //scannerHome = tool 'SonarQubeScanner'
+    
   }   
 parameters {
 
     string(name: 'imagename', defaultValue: '1.0', description: 'tagname')
     string(name: 'version', defaultValue: '1.0', description: 'tagname')
 }
-    
+
+
 
 stages{
 
     // checkout stage //
-    stage('checkout from GIT'){
+    stage('GIT Pull'){
         steps{
             checkout scm
         }
     }
+
+ stages{
+
+    // checkout stage //
+    stage('Maintainance Mode Enabled'){
+        steps{
+            sh 'php ./bin/magento maintenance:enable || true'
+        }
+    }   
     
  stage("composer install"){
 
@@ -73,4 +83,4 @@ stages{
     
 }
 }
-
+}
