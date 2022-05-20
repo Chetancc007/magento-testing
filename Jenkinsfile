@@ -47,7 +47,7 @@ stages{
     stage("composer install"){
 
         steps{
-            sh 'apt get update'
+           // sh 'apt get update'
             sh 'composer install'
         }
     } 
