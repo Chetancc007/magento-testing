@@ -38,7 +38,7 @@ stages{
         }
     }
 
-    stage('GIT Pull'){
+    stage('Checkout Source Code from Master Branch'){
         steps{
             checkout scm
         }
