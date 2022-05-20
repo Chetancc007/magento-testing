@@ -31,15 +31,13 @@ stages{
         }
     }
 
- stages{
 
-    // checkout stage //
+    
     stage('Maintainance Mode Enabled'){
         steps{
             sh 'php ./bin/magento maintenance:enable || true'
         }
-    }  
- } 
+    }   
     
  stage("composer install"){
 
@@ -84,4 +82,5 @@ stages{
     
 }
 }
+
 
