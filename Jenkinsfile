@@ -33,7 +33,7 @@ stages{
     
     stage('Enabling maintainence mode'){
         steps{
-            sh 'chmod a+x ./bin/magento'
+            //sh 'chmod a+x ./bin/magento'
             sh 'php ./bin/magento maintenance:enable || true'
         }
     }
@@ -98,10 +98,6 @@ stages{
     }
     
 
-
-    
- 
-       
 
     // Docker build and push to docker-hub //
 
