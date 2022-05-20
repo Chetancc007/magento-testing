@@ -58,15 +58,15 @@ stages{
         steps{
             sh 'cd /var/www/html/magento'
             sh 'composer update'
-            sh 'php bin/magento setup:upgrade'
+            sh 'php /var/www/html/magento setup:upgrade'
         }
     }
 
     stage(' Di Compile'){
 
         steps{
-            sh 'cd /var/www/html/magento'
-            sh 'php bin/magento setup:di:compile'
+           
+            sh 'php /var/www/html/magento setup:di:compile'
             
         }
     }
@@ -74,8 +74,8 @@ stages{
     stage(' Static Content Deploy'){
 
         steps{
-            sh 'cd /var/www/html/magento'
-            sh 'php bin/magento setup:static-content:deploy'
+            
+            sh 'php /var/www/html/magento setup:static-content:deploy'
             
         }
     }
@@ -83,8 +83,8 @@ stages{
     stage(' Cache Flush'){
 
         steps{
-            sh 'cd /var/www/html/magento'
-            sh 'php bin/magento clean:flush'
+            
+            sh 'php /var/www/html/magento clean:flush'
             
         }
     }
@@ -92,8 +92,8 @@ stages{
     stage(' Disabiling maintenance mode'){
 
         steps{
-            sh 'cd /var/www/html/magento'
-            sh 'php bin/magento maintenance:disable'
+            
+            sh 'php /var/www/html/magento maintenance:disable'
             
         }
     }
