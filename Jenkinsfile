@@ -30,17 +30,77 @@ stages{
             checkout scm
         }
     }
-
-
     
+    stage('Enabling maintainence mode'){
+        steps{
+            sh 'chmod a+x ./bin/magento'
+            sh 'php ./bin/magento maintenance:enable || true'
+        }
+    }
 
-    
- stage("composer install"){
+    stage('GIT Pull'){
+        steps{
+            checkout scm
+        }
+    }
+
+    stage("composer install"){
 
         steps{
+            sh 'apt get update'
             sh 'composer install'
         }
     } 
+
+    stage(' Setup Upgrade'){
+
+        steps{
+
+            sh 'composer update'
+            sh 'php bin/magento setup:upgrade'
+        }
+    }
+
+    stage(' Di Compile'){
+
+        steps{
+
+            sh 'php bin/magento setup:di:compile'
+            
+        }
+    }
+
+    stage(' Static Content Deploy'){
+
+        steps{
+
+            sh 'php bin/magento setup:static-content:deploy'
+            
+        }
+    }
+
+    stage(' Cache Flush'){
+
+        steps{
+
+            sh 'php bin/magento clean:flush'
+            
+        }
+    }
+
+    stage(' Disabiling maintenance mode'){
+
+        steps{
+
+            sh 'php bin/magento maintenance:disable'
+            
+        }
+    }
+    
+
+
+    
+ 
        
 
     // Docker build and push to docker-hub //
@@ -78,5 +138,4 @@ stages{
     
 }
 }
-
 
