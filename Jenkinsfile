@@ -19,7 +19,15 @@ parameters {
     string(name: 'imagename', defaultValue: '1.0', description: 'tagname')
     string(name: 'version', defaultValue: '1.0', description: 'tagname')
 }
+    
+stages{
 
+    // Initiating Pipeline//
+    stage('Initiating Pipeline'){
+        steps{
+            echo Pipeline Initiated
+        }
+    }
 stages{
 
     // checkout stage //
