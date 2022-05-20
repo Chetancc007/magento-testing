@@ -33,7 +33,7 @@ stages{
     
     stage('Enabling maintainence mode'){
         steps{
-            //sh 'chmod a+x ./bin/magento'
+            sh 'cd /var/www/html/magento'
             sh 'php ./bin/magento maintenance:enable || true'
         }
     }
@@ -48,6 +48,7 @@ stages{
 
         steps{
            // sh 'apt get update'
+            sh 'cd /var/www/html/magento'
             sh 'composer install'
         }
     } 
@@ -55,7 +56,7 @@ stages{
     stage(' Setup Upgrade'){
 
         steps{
-
+            sh 'cd /var/www/html/magento'
             sh 'composer update'
             sh 'php bin/magento setup:upgrade'
         }
@@ -64,7 +65,7 @@ stages{
     stage(' Di Compile'){
 
         steps{
-
+            sh 'cd /var/www/html/magento'
             sh 'php bin/magento setup:di:compile'
             
         }
@@ -73,7 +74,7 @@ stages{
     stage(' Static Content Deploy'){
 
         steps{
-
+            sh 'cd /var/www/html/magento'
             sh 'php bin/magento setup:static-content:deploy'
             
         }
@@ -82,7 +83,7 @@ stages{
     stage(' Cache Flush'){
 
         steps{
-
+            sh 'cd /var/www/html/magento'
             sh 'php bin/magento clean:flush'
             
         }
@@ -91,7 +92,7 @@ stages{
     stage(' Disabiling maintenance mode'){
 
         steps{
-
+            sh 'cd /var/www/html/magento'
             sh 'php bin/magento maintenance:disable'
             
         }
