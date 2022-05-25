@@ -128,7 +128,7 @@ COPY . .
 
 RUN chown -R www-data:www-data /var/www/html/
 
-EXPOSE 9000 80
+EXPOSE 5000 80
 
 # Let supervisord start nginx & php-fpm
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
