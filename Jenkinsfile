@@ -125,7 +125,7 @@ stages{
        
        steps{
                     sh """
-                        cd /home/ubuntu
+                        cd /var/www/html/magento
                         docker-compose -f docker-compose.yml pull
                         docker-compose -f docker-compose.yml up -d
                     """
