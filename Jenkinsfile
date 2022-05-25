@@ -34,7 +34,8 @@ stages{
     stage('Enabling maintainence mode'){
         steps{
             sh 'cd /var/www/html/magento'
-            sh 'php ./bin/magento maintenance:enable || true'
+            //sh 'php ./bin/magento maintenance:enable || true'
+            sh 'php /var/www/html/magento maintenance:enable || true'
         }
     }
 
